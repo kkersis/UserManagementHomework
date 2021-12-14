@@ -56,6 +56,7 @@ namespace UserManagementHomework.Controllers
         [Route("InsertFromFile")]
         public async Task<ActionResult> InsertFromFile(IFormFile users)
         {
+            if(users == null) return BadRequest("Corrupted file or file was empty");
             var result = await _userService.InsertFromFile(users);
             if (result > 0)
                 return NoContent();

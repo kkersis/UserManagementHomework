@@ -52,6 +52,7 @@ namespace UserManagementHomework.Services
         {
             string hashedPassword = HashService.HashPassword(user.PasswordHash);
             user.PasswordHash = hashedPassword;
+            user.DateCreated = DateTime.Now;
             _dbContext.Add(user);
             return await _dbContext.SaveChangesAsync();
         }
@@ -64,9 +65,12 @@ namespace UserManagementHomework.Services
                 fileContents = await reader.ReadToEndAsync();
             }
             var users = JsonConvert.DeserializeObject<IEnumerable<User>>(fileContents);
-            foreach(var user in users)
+            foreach (var user in users)
+            {
                 user.PasswordHash = HashService.HashPassword(user.PasswordHash);
-           
+                user.DateCreated = DateTime.Now;
+            }
+
             _dbContext.AddRange(users);
             return await _dbContext.SaveChangesAsync();
         }
@@ -75,6 +79,9 @@ namespace UserManagementHomework.Services
         {
             try
             {
+                string hashedPassword = HashService.HashPassword(user.PasswordHash);
+                user.PasswordHash = hashedPassword;
+                user.DateCreated = DateTime.Now;
                 _dbContext.Update(user);
                 return await _dbContext.SaveChangesAsync();
             }
